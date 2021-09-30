@@ -3,6 +3,8 @@
 
 library(plyr)
 library(tidyverse)
+library(tidyr)
+
 library(reshape)
 
 #First csv file -> children_out_of_school_primary_female.csv
@@ -10,25 +12,20 @@ library(reshape)
 #             children not enrolled in primary or secondary school
 
 #Read in csv file
-COSPF_raw <- read.csv("children_out_of_school_primary_female.csv", header = TRUE)
+COSPF_raw <- as_tibble(read.csv("children_out_of_school_primary_female.csv"))
 
-COSPF_1 <- melt(COSPF_raw,id = "country")
-  
-names(COSPF_1)[2] <- "year"
-names(COSPF_1)[3] <- "Female_Not_Enrolled_Count_raw"
+COSPF_1 <- COSPF_raw %>% 
+  tidyr::pivot_longer(
+    cols = starts_with("X"), 
+    names_to = "year", 
+    values_to = "count", 
+    names_prefix = "X",na.rm = TRUE)
 
+COSPF_1$count <- str_replace(COSPF_1$count, "k", "00")
+COSPF_1$count <- str_replace(COSPF_1$count, "M", "0000")
+COSPF_1$count <- as.numeric(str_replace_all(COSPF_1$count, "[^0-9]+", ""))
 
-
-COSPF_1$year <- as.factor(str_replace_all(COSPF_1$year, "[^0-9]+", ""))
-COSPF_1$Female_Not_Enrolled_Count_1 <- str_replace(COSPF_1$Female_Not_Enrolled_Count_raw, "k", "00")
-COSPF_1$Female_Not_Enrolled_Count_2 <- str_replace(COSPF_1$Female_Not_Enrolled_Count_1, "M", "0000")
-COSPF_1$Female_Not_Enrolled_Count <- as.integer(str_replace_all(COSPF_1$Female_Not_Enrolled_Count_2, "[^0-9]+", ""))
-COSPF_1$Female_Not_Enrolled_Count_raw <- NULL
-COSPF_1$Female_Not_Enrolled_Count_1 <- NULL
-COSPF_1$Female_Not_Enrolled_Count_2 <- NULL
-
-COSPF_2 <- subset.data.frame(COSPF_1, Female_Not_Enrolled_Count != "NA") #Remove all CountryxYear with no counts
-
+COSPF_2 <- subset.data.frame(COSPF_1, count != "NA") #Remove all CountryxYear with no counts
 
 counts <- count(COSPF_2, year)
 
@@ -36,7 +33,7 @@ counts$max <- max(counts$n)
 
 maxobs_year <- subset.data.frame(counts, max == n)
 
-COSPF_3 <- full_join(COSPF_3,maxobs_year, by = "year")
+COSPF_3 <- left_join(COSPF_2,maxobs_year, by = "year")
 
 
 
