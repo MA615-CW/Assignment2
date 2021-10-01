@@ -4,8 +4,8 @@
 library(plyr)
 library(tidyverse)
 library(tidyr)
+library(ggplot2)
 
-library(reshape)
 
 #First csv file -> children_out_of_school_primary_female.csv
 #Description: Children out of school are the number of primary-school-age 
@@ -14,28 +14,34 @@ library(reshape)
 #Read in csv file
 COSPF_raw <- as_tibble(read.csv("children_out_of_school_primary_female.csv"))
 
+#Stack the year columns and remove the "X" prefix
 COSPF_1 <- COSPF_raw %>% 
   tidyr::pivot_longer(
     cols = starts_with("X"), 
     names_to = "year", 
     values_to = "count", 
-    names_prefix = "X",na.rm = TRUE)
+    names_prefix = "X")
 
+#change k and M formatting to show the values in thousands and millions
 COSPF_1$count <- str_replace(COSPF_1$count, "k", "00")
 COSPF_1$count <- str_replace(COSPF_1$count, "M", "0000")
+
+#remove any decimals left over from the k and M notation
 COSPF_1$count <- as.numeric(str_replace_all(COSPF_1$count, "[^0-9]+", ""))
 
-COSPF_2 <- subset.data.frame(COSPF_1, count != "NA") #Remove all CountryxYear with no counts
+#Remove all CountryxYear combinations with missing counts
+COSPF_2 <- subset.data.frame(COSPF_1, count != "NA") 
 
-counts <- count(COSPF_2, year)
-
-counts$max <- max(counts$n)
-
+#Identify the year that has the most countries with reported data
+counts <- count(COSPF_2, year) #count of countries by year
+counts$max <- max(counts$n) 
 maxobs_year <- subset.data.frame(counts, max == n)
 
-COSPF_3 <- left_join(COSPF_2,maxobs_year, by = "year")
+#subset down the overall dataset to the year with the most country data
+COSPF_3 <- right_join(COSPF_2,maxobs_year, by = "year")
 
-
+ggplot(data=COSPF_3, aes(country,count)) + 
+  geom_bar(stat="identity")
 
 #Second csv file -> children_per_woman_total_fertility.csv
 #Description: total fertility rate. The number of children that would be born 
