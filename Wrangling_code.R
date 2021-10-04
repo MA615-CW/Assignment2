@@ -20,7 +20,6 @@ str(COSPF_raw)
 dim(COSPF_raw)
 
 
-
 #Need to transform the data by stack the year columns by country and remove the "X" prefix
 COSPF_1 <- COSPF_raw %>% 
   tidyr::pivot_longer(
@@ -51,20 +50,38 @@ maxobs_year <- subset.data.frame(counts, max == n)
 #subset down the overall dataset to the year with the most country data
 COSPF_3 <- right_join(COSPF_2,maxobs_year, by = "year")
 
-library(gapminder)
-library(countrycode) ## Converting the country name to Country code
 
+#Pull in the gapminder data and country code library
+library(gapminder)
+library(countrycode)
+
+#subset down gapminder data to just country and continent
 continent <- gapminder %>% select(country, continent)
 
-unique(continent)
+#create 1 obs per country x continent -- crosswalk of continent and country
+continent <- unique(continent)
 
-#add country codes to the data
+#Replace country with country code on the gapminder crosswalk
 continent$country_code <- countrycode(continent$country, 'country.name', 'iso3c')
+continent <- continent %>% select(country_code, continent)
+
+#Add country code to subset data
 COSPF_3$country_code <- countrycode(COSPF_3$country, 'country.name', 'iso3c')
 
-#Add continent to the data
-COSPF_4 <- semi_join(COSPF_3, continent, by = "country_code")
-investigate <- anti_join(COSPF_3, continent, by = "country_code")
+#merge continent information onto the data
+COSPF_4 <- full_join(COSPF_3, continent, by = "country_code")
+COSPF_4 <- filter(COSPF_4, continent != "NA" & country != "NA")
+
+#investigate cases that are on the COSPF data, but not on the gapminder crosswalk
+missing_continent <- anti_join(COSPF_3, continent, by = "country_code")
+
+#for now we will code these country's continents as missing, 
+#but should in the future potentially look to do some case specific cleaning
+missing_continent$continent <- "missing"
+
+#set the remaining 22 cases onto the COSPF data with continent set to missing
+COSPF_5 <- rbind(COSPF_4, missing_continent)
+
 
 #Second csv file -> children_per_woman_total_fertility.csv
 #Description: total fertility rate. The number of children that would be born 
