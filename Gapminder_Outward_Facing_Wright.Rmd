@@ -1,0 +1,18 @@
+---
+title: "Gapminder Data"
+output: html_document
+author: "Carolyn Wright"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r, echo=FALSE}
+source(file = "Wrangling_code", echo = FALSE)
+source(file = "Visualization_function", echo = FALSE)
+
+```
+
+
+

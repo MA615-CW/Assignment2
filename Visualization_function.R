@@ -14,7 +14,6 @@ Tidy_data <- as_tibble(read.csv("Tidy_Gapminder_Data.csv"))
 Visualization_years <- function(dat,yr1, yr2, hist, spaghet) {
   
   
-  
   #Only keep data with full obs
   dat$complete <- complete.cases(dat)
   dat_complete <- filter(dat, complete == "TRUE")
