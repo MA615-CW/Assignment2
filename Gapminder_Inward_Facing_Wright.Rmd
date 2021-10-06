@@ -1,0 +1,17 @@
+---
+title: "Gapminder_Inward_Facing_Wright"
+output: pdf_document
+author: "Carolyn Wright"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,echo=TRUE}
+
+#Include source files in the RMD. 
+source(file = "Wrangling_code.R", echo = TRUE)
+source(file = "Visualization_function.R", echo = TRUE)
+
+```
