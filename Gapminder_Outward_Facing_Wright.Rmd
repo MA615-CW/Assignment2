@@ -1,18 +1,63 @@
 ---
-title: "Gapminder Data"
-output: html_document
+title: "Gapminder Data Observations"
 author: "Carolyn Wright"
+output: rmdformats::material
+#output: html_document
 ---
 
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
-```{r, echo=FALSE}
-source(file = "Wrangling_code", echo = FALSE)
-source(file = "Visualization_function", echo = FALSE)
+```{r,echo=FALSE}
+
+#Include source files in the RMD. Note: echo = FALSE so that the code will not be displayed in the RMD file.
+source(file = "Wrangling_code.R", echo = FALSE)
+source(file = "Visualization_function.R", echo = FALSE)
+
+```
+---
+
+---
+---
+
+
+<h3> Brief Data Description </h3>
+ + Female Children out of school are the number of primary-school-age female children not enrolled in primary or secondary school
+ + Total fertility rate. The number of children that would be born to each woman with prevailing age-specific fertility rates
+
+---
+
+<h3> Plot Descriptions </h3>
+ + Top Left: Histogram of average fertility rate by continent between two years
+ + Top Right: Histogram of average number of female children that are out of school by continent between two years
+ + Bottom Left: Spaghetti chart of average fertility rate by continent between two years.
+ + Bottom Right: Spaghetti chart of average number of female children that are out of school by continent between two years.
+ 
+<div align="center"><h1><b> Set 1: 1900 - 2000 <b></div> </h1>
+```{r,echo=FALSE,out.width="100%"}
+#the following code will output histograms and spaghetti plots for all years included in the dataset
+
+Visualization_years(Full_GapMinder_Data,1900, 2000,1,1)
 
 ```
 
 
+---
+<div align="center"><h1><b>Set 2: 2000 - 2021</b> </div> </h1>
+```{r,echo=FALSE,out.width="100%"}
+#the following code will output histograms and spaghetti plots for all years included in the dataset
 
+Visualization_years(Full_GapMinder_Data,2000, 2021,1,1)
+
+```
+
+<h3>Observations:</h3>
