@@ -20,8 +20,8 @@ COSPF_raw <- as_tibble(read.csv("children_out_of_school_primary_female.csv"))
 
 
 #Explore the data
-str(COSPF_raw)
-dim(COSPF_raw)
+#str(COSPF_raw)
+#dim(COSPF_raw)
 
 
 #Need to transform the data by stack the year columns by country and remove the "X" prefix
@@ -66,7 +66,7 @@ COSPF_4 <- filter(COSPF_4, continent != "NA" & country != "NA")
 missing_continent <- anti_join(COSPF_2, continent, by = "country_code")
 
 #for now we will code these country's continents as missing, 
-#but should in the future potentially look to do some case specific cleaning
+#but should in the future look to do some case specific cleaning to correct this
 missing_continent$continent <- "missing"
 
 #set the remaining 711 cases onto the COSPF data with continent set to missing
@@ -82,8 +82,8 @@ COSPF_FINAL <- rbind(COSPF_4, missing_continent)
 CPWTF_raw <- as_tibble(read.csv("children_per_woman_total_fertility.csv"))
 
 #Explore the data
-str(CPWTF_raw)
-dim(CPWTF_raw)
+#str(CPWTF_raw)
+#dim(CPWTF_raw)
 
 #Need to transform the data by stack the year columns by country and remove the "X" prefix
 CPWTF_1 <- CPWTF_raw %>% 
@@ -104,7 +104,7 @@ CPWTF_3 <- filter(CPWTF_2, continent != "NA" & country != "NA")
 missing_continent2 <- anti_join(CPWTF_1, continent, by = "country_code")
 
 #for now we will code these country's continents as missing, 
-#but should in the future potentially look to do some case specific cleaning
+#but should in the future look to do some case specific cleaning to correct this
 missing_continent2$continent <- "missing"
 
 #set the remaining 18060 cases onto the CPWTF_3 data with continent set to missing
@@ -112,10 +112,7 @@ CPWTF_FINAL <- rbind(CPWTF_3, missing_continent2)
 
 #-------------------------------------------------------------------------------
 
-
-#Merge datasets together - This data set will include all observations in both the COSPF_FINAL and thr CPWTF_FINAL tibbles
+#Merge datasets together - This data set will include all observations in the COSPF_FINAL and the CPWTF_FINAL tibbles
+#Note: this will lead to incomplete observations
 Full_GapMinder_Data <- as_tibble(merge(COSPF_FINAL, CPWTF_FINAL, all.x = TRUE, all.y = TRUE))
-
-#Output data to project folder
-write.csv(Full_GapMinder_Data, "Tidy_Gapminder_Data.csv")
 

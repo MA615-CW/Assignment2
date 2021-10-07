@@ -1,0 +1,64 @@
+---
+title: "Gapminder Data Observations"
+author: "Carolyn Wright"
+output: rmdformats::material
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r,echo=FALSE}
+
+#Include source files in the RMD. Note: echo = FALSE so that the code will not be displayed in the RMD file.
+source(file = "Wrangling_code.R", echo = FALSE)
+source(file = "Visualization_function.R", echo = FALSE)
+
+```
+---
+
+---
+---
+
+
+<h3> Brief Data Description </h3>
+ + Female Children out of school are the number of primary-school-age female children not enrolled in primary or secondary school
+ + Total fertility rate. The number of children that would be born to each woman with prevailing age-specific fertility rates
+
+---
+
+<h3> Plot Descriptions </h3>
+ + Top Left: Histogram of average fertility rate by continent between two years
+ + Top Right: Histogram of average number of female children that are out of school by continent between two years
+ + Bottom Left: Spaghetti chart of average fertility rate by continent between two years.
+ + Bottom Right: Spaghetti chart of average number of female children that are out of school by continent between two years.
+ 
+<div align="center"><h1><b> Set 1: 1980 - 2000 </b></div> </h1>
+```{r,echo=FALSE,out.width="100%"}
+#the following code will output histograms and spaghetti plots for all years included in the dataset
+
+Visualization_years(Full_GapMinder_Data,1980, 2000,1,1)
+
+```
+
+
+---
+<div align="center"><h1><b>Set 2: 2000 - 2020</b> </div> </h1>
+```{r,echo=FALSE,out.width="100%"}
+#the following code will output histograms and spaghetti plots for all years included in the dataset
+
+Visualization_years(Full_GapMinder_Data,2000, 2020,1,1)
+
+```
+
+<h2>Observations:</h2>
+ + From 1980 to 2000 Africa had the highest average fertility rates, while Asia had highest numbers of female children out of school. During this time period average fertility rate and the average number of female students out of school did not show similar distributions across continents when looking at the histograms. However, when looking at the histogram for 2000 to 2020 you see more similar distributions across the continents within for fertility rates and number of female children out of school across continents. At a closer look at the spaghetti plots you can see that although the distributions may look similar at the overall level, the fertility rates and the number of female children are not actually shifting at the same rate over time.
+ + Another observation is regarding Oceania where we see very low counts. However, after taking a closer look at the spaghetti plots during both periods of time, one can see that there are a number of years without any information. It may be useful to collect more information from Oceania before drawing any conclusions.
