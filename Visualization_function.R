@@ -127,4 +127,36 @@ Visualization_years <- function(dat,yr1, yr2, hist, spaghet) {
 
 }
 
+#Here is editor's visualization function
+plot5 <- function(df){
+  mynamestheme <- theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (15)), 
+                        #legend.title = element_text(colour = "#293352",  face = "bold.italic", family = "Helvetica",size =(2)), 
+                        #legend.text = element_text(face = "italic", colour="#293352",family = "Helvetica",size =(2)), 
+                        axis.title = element_text(family = "Helvetica", size = (10), colour = "#293352"),
+                        axis.text = element_text(family = "Courier", colour = "#000080", size = (10)))
+  
+  cb_palette = c("#f4b6c2", "#6497b1", "#edc951", "#8874a3", "#4a91f2", "#ffffff")
+  df <- df[df$year %in% c(2000:2020),]
+  df$year = as.numeric(df$year)
+  df$Fertility_Rate = as.numeric(df$Fertility_Rate)
+  df = df[!(df$continent == "missing"), ]
+  plot_new<-
+    ggplot(df, aes(x=year, y=Fertility_Rate, group = continent, colour = continent)) + 
+    mynamestheme +
+    geom_point()+     
+    scale_color_manual(values = cb_palette) +
+    facet_grid(~cut_number(year, n = 2))+
+    ggtitle("Average Fertility Rate by Continents Over Time")
+  plot_new
+}
 
+#######################
+#' Your code is already very perfect, and my R level is not enough to improve your visualization function, and
+#' I even learned a lot from your work.
+#' The above function was written at my own level, not a very good plot but there ere two tips here:
+#' 1.cb_palette = c("#f4b6c2", "#6497b1", "#edc951", "#8874a3", "#4a91f2", "#ffffff") you can pick up your favorite colors
+#'   by using this way
+#' 2.facet_grid(~cut_number(year, n = 2))
+#'   It helps divide the data into n bins each containing the same number of points, and in this case, n=2, it splits the year.
+#' These are just a few tips that I hope will help.
+########################
